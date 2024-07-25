@@ -1,0 +1,14 @@
+{
+  "manifest_version": 3,
+  "name": "Yet Another Coursera Subtitle",
+  "version": "1.0",
+  "description": "Yet another Chrome extension that shows video subtitles in a better way on Coursera.",
+  "permissions": ["activeTab"],
+  "content_scripts": [
+    {
+      "matches": ["*://*.coursera.org/*"],
+      "js": ["content.js"],
+      "css": ["styles.css"]
+    }
+  ]
+}

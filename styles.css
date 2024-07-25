@@ -1,0 +1,11 @@
+#yet-another-coursera-subtitle {
+  width: 100%;
+  background: rgba(50, 50, 50, 0.5);
+  color: white;
+  font-size: 26px;
+  text-align: center;
+  font-family: "YouTube Noto", Roboto, "Arial Unicode Ms", Arial, Helvetica;
+  padding: 20px;
+  box-sizing: border-box;
+  z-index: 1000;
+}
