@@ -43,3 +43,13 @@ chrome.runtime.onMessage.addListener((request) => {
     createSubtitleElement();
   }
 });
+
+// Listen for URL changes and reinitialize the subtitle element
+let lastUrl = location.href;
+new MutationObserver(() => {
+  const url = location.href;
+  if (url !== lastUrl) {
+    lastUrl = url;
+    waitForElement("#video-player-row", createSubtitleElement);
+  }
+}).observe(document, { subtree: true, childList: true });
