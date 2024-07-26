@@ -2,8 +2,9 @@
   width: 100%;
   background: rgba(50, 50, 50, 0.75);
   color: white;
-  font-size: 30px;
+  font-size: 28px;
   text-align: center;
+  letter-spacing: 1px;
   font-family: "YouTube Noto", Roboto, "Arial Unicode Ms", Arial, Helvetica;
   padding: 24px;
   box-sizing: border-box;

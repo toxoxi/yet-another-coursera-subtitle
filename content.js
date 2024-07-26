@@ -1,8 +1,11 @@
 function createSubtitleElement() {
   // Find the video container
   const videoPlayerRow = document.querySelector("#video-player-row");
-  if (!videoPlayerRow) {
-    throw new Error("#video-player-row is not found");
+  const existingSubtitleContainer = document.querySelector(
+    "#yet-another-coursera-subtitle"
+  );
+  if (!videoPlayerRow || existingSubtitleContainer) {
+    return;
   }
 
   // Create a new subtitle container
