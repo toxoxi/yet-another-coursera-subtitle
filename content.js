@@ -36,3 +36,10 @@ function waitForElement(selector, callback) {
 window.addEventListener("load", () => {
   waitForElement("#video-player-row", createSubtitleElement);
 });
+
+// Listen for messages from the background script
+chrome.runtime.onMessage.addListener((request) => {
+  if (request.action === "YACS_createSubtitleElement") {
+    createSubtitleElement();
+  }
+});

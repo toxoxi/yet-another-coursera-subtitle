@@ -4,6 +4,9 @@
   "version": "1.0",
   "description": "Yet another Chrome extension that shows video subtitles in a better way on Coursera.",
   "permissions": ["activeTab"],
+  "background" : {
+    "service_worker": "background.js"
+  },
   "content_scripts": [
     {
       "matches": ["*://*.coursera.org/*"],
@@ -11,6 +14,7 @@
       "css": ["styles.css"]
     }
   ],
+  "action": {},
   "icons": {
     "16": "icons/icon16.png",
     "32": "icons/icon32.png",
