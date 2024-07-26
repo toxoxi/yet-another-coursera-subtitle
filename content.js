@@ -32,7 +32,11 @@ function waitForElement(selector, callback) {
       me.disconnect(); // Stop observing
     }
   });
+
   observer.observe(document.body, { childList: true, subtree: true });
+
+  // Release the observer if 5 seconds pass
+  setTimeout(() => observer.disconnect(), 5000);
 }
 
 // Initialize the subtitle element creation when the page is fully loaded
