@@ -1,5 +1,14 @@
+// Executes only the last call during consecutive calls
+function debounce(func, wait) {
+  let timeout;
+  return function (...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), wait);
+  };
+}
+
 function createSubtitleElement() {
-  // Find the video container
+  // Get the video container
   const videoPlayerRow = document.querySelector("#video-player-row");
   const existingSubtitleContainer = document.querySelector(
     "#yet-another-coursera-subtitle"
@@ -8,20 +17,30 @@ function createSubtitleElement() {
     return;
   }
 
-  // Create a new subtitle container
+  // Create and add a new subtitle container
   const subtitleContainer = document.createElement("div");
   subtitleContainer.id = "yet-another-coursera-subtitle";
   videoPlayerRow.appendChild(subtitleContainer);
 
-  // Sync the new subtitle container with the active subtitle
-  const observer = new MutationObserver(() => {
+  // Debounce the update process
+  // Shorten the delay to 25ms for near real-time updates
+  const updateSubtitle = debounce(() => {
     const activeSubtitle = document.querySelector(".rc-Phrase.active");
     if (activeSubtitle) {
       subtitleContainer.textContent = activeSubtitle.textContent;
     }
-  });
+  }, 25);
 
-  observer.observe(document.body, { childList: true, subtree: true });
+  // Create a MutationObserver
+  // Add characterData: true to also monitor character data changes
+  const observer = new MutationObserver(updateSubtitle);
+
+  // Set the observation target to the entire document.body (to avoid missing changes)
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+    characterData: true,
+  });
 }
 
 function waitForElement(selector, callback) {
@@ -34,12 +53,10 @@ function waitForElement(selector, callback) {
   });
 
   observer.observe(document.body, { childList: true, subtree: true });
-
-  // Release the observer if 5 seconds pass
-  setTimeout(() => observer.disconnect(), 5000);
+  setTimeout(() => observer.disconnect(), 5000); // Stop observing after 5 seconds
 }
 
-// Initialize the subtitle element creation when the page is fully loaded
+// Initialize the subtitle container after the page loads
 window.addEventListener("load", () => {
   waitForElement("#video-player-row", createSubtitleElement);
 });
@@ -51,12 +68,15 @@ chrome.runtime.onMessage.addListener((request) => {
   }
 });
 
-// Listen for URL changes and reinitialize the subtitle element
+// Detect URL changes (for SPA support) with debounce
 let lastUrl = location.href;
-new MutationObserver(() => {
-  const url = location.href;
-  if (url !== lastUrl) {
-    lastUrl = url;
+const handleUrlChange = debounce(() => {
+  if (location.href !== lastUrl) {
+    lastUrl = location.href;
     waitForElement("#video-player-row", createSubtitleElement);
   }
+}, 200);
+
+new MutationObserver(() => {
+  handleUrlChange();
 }).observe(document, { subtree: true, childList: true });
